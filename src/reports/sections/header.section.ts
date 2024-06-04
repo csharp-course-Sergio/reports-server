@@ -20,6 +20,16 @@ export const headerSection = (options: HeaderOptions): Content => {
   const { title, showDate = true, showLogo = true, subtitle } = options;
 
   const headerLogo: Content = showLogo ? logo : '';
+
+  const headerTitle: Content = title
+    ? {
+        text: title,
+        style: {
+          bold: true,
+        },
+      }
+    : null;
+
   const headerDate: Content = showDate
     ? {
         text: DateFormatter.getDDMMMMYYYY(new Date()),
@@ -29,6 +39,6 @@ export const headerSection = (options: HeaderOptions): Content => {
     : '';
 
   return {
-    columns: [headerLogo, headerDate],
+    columns: [headerLogo, headerTitle, headerDate],
   };
 };
