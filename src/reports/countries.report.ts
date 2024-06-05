@@ -24,7 +24,7 @@ export const getCountriesReport = (
     pageMargins: [40, 130, 40, 60],
     content: [
       {
-        layout: 'lightHorizontalLines', // optional
+        layout: 'customLayout01',
         table: {
           headerRows: 1,
           widths: [50, 50, 70, '*', 'auto', '*'],
