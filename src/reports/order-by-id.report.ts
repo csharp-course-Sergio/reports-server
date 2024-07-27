@@ -4,6 +4,7 @@ import type {
   TDocumentDefinitions,
 } from 'pdfmake/interfaces';
 import { footerSection } from './sections/footer.sections';
+import { CurrencyFormatter } from 'src/helpers';
 
 const logo: Content = {
   image: 'src/assets/tucan-banner.png',
@@ -36,6 +37,7 @@ export const orderByIdReport = (): TDocumentDefinitions => {
         text: 'Tucan Code',
         style: 'header',
       },
+      //   Dirección y número de recibo
       {
         columns: [
           {
@@ -55,11 +57,13 @@ export const orderByIdReport = (): TDocumentDefinitions => {
           },
         ],
       },
+      //   QR
       {
         qr: 'https://devtalles.com',
         fit: 75,
         alignment: 'right',
       },
+      //   Datos del cliente
       {
         text: [
           {
@@ -69,6 +73,86 @@ export const orderByIdReport = (): TDocumentDefinitions => {
           },
 
           `\nRazón Social: Richter Supermarkt\nMichael Holz\nGrenzacherweg 237`,
+        ],
+      },
+      // Tabla con detalles de la orden
+      {
+        layout: 'headerLineOnly',
+        margin: [0, 20],
+        table: {
+          headerRows: 1,
+          widths: [50, '*', 'auto', 'auto', 'auto'],
+          body: [
+            ['ID', 'Descripción', 'Cantidad', 'Precio', 'Total'],
+            [
+              '1',
+              'Producto 1',
+              '1',
+              '100',
+              {
+                text: CurrencyFormatter.formatCurrency(100),
+                alignment: 'right',
+                bold: true,
+              },
+            ],
+            [
+              '2',
+              'Producto 2',
+              '2',
+              '200',
+              {
+                text: CurrencyFormatter.formatCurrency(1500),
+                alignment: 'right',
+                bold: true,
+              },
+            ],
+            [
+              '3',
+              'Producto 3',
+              '3',
+              '300',
+              {
+                text: CurrencyFormatter.formatCurrency(900),
+                alignment: 'right',
+                bold: true,
+              },
+            ],
+          ],
+        },
+      },
+      '\n\n',
+      // Tabla de totales
+      {
+        columns: [
+          {
+            width: '*',
+            text: '',
+          },
+          {
+            width: 'auto',
+            layout: 'noBorders',
+            table: {
+              widths: ['auto', 'auto'],
+              body: [
+                [
+                  'Subtotal',
+                  {
+                    text: CurrencyFormatter.formatCurrency(3115.75),
+                    bold: true,
+                    alignment: 'right',
+                  },
+                ],
+                [
+                  'Total',
+                  {
+                    text: CurrencyFormatter.formatCurrency(3520.8),
+                    bold: true,
+                    alignment: 'right',
+                  },
+                ],
+              ],
+            },
+          },
         ],
       },
     ],
