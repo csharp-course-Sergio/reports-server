@@ -4,7 +4,7 @@ import type {
   TDocumentDefinitions,
 } from 'pdfmake/interfaces';
 import { footerSection } from './sections/footer.sections';
-import { CurrencyFormatter } from 'src/helpers';
+import { CurrencyFormatter, DateFormatter } from 'src/helpers';
 
 export interface CompleteOrder {
   order_id: number;
@@ -69,7 +69,12 @@ const styles: StyleDictionary = {
 export const orderByIdReport = (value: ReportValues): TDocumentDefinitions => {
   const { data } = value;
 
-  console.log(data);
+  const { customers, order_details } = data;
+
+  const subTotal = order_details.reduce(
+    (acc, detail) => acc + detail.quantity * +detail.products.price,
+    0,
+  );
 
   return {
     styles,
@@ -91,11 +96,11 @@ export const orderByIdReport = (value: ReportValues): TDocumentDefinitions => {
           {
             text: [
               {
-                text: 'Recibo No#: 10255\n',
+                text: `Recibo No#: ${data.order_id}\n`,
                 bold: true,
               },
 
-              `Fecha del recibo: 11 de julio de 2021\nPagar antes de: 18 de mayo de 2024`,
+              `Fecha del recibo: ${DateFormatter.getDDMMMMYYYY(data.order_date)}\nPagar antes de: ${DateFormatter.getDDMMMMYYYY(data.order_date)}`,
             ],
             alignment: 'right',
           },
@@ -116,7 +121,9 @@ export const orderByIdReport = (value: ReportValues): TDocumentDefinitions => {
             fontSize: 14,
           },
 
-          `\nRazón Social: Richter Supermarkt\nMichael Holz\nGrenzacherweg 237`,
+          `\nRazón Social: ${customers.customer_name}
+          Contacto: ${customers.contact_name}
+          Dirección: ${customers.address}, ${customers.city}, ${customers.country}`,
         ],
       },
       // Tabla con detalles de la orden
@@ -128,39 +135,22 @@ export const orderByIdReport = (value: ReportValues): TDocumentDefinitions => {
           widths: [50, '*', 'auto', 'auto', 'auto'],
           body: [
             ['ID', 'Descripción', 'Cantidad', 'Precio', 'Total'],
-            [
-              '1',
-              'Producto 1',
-              '1',
-              '100',
+            ...order_details.map((detail) => [
+              detail.order_detail_id,
+              detail.products.product_name,
+              detail.quantity,
               {
-                text: CurrencyFormatter.formatCurrency(100),
+                text: CurrencyFormatter.formatCurrency(+detail.products.price),
                 alignment: 'right',
-                bold: true,
               },
-            ],
-            [
-              '2',
-              'Producto 2',
-              '2',
-              '200',
               {
-                text: CurrencyFormatter.formatCurrency(1500),
-                alignment: 'right',
+                text: CurrencyFormatter.formatCurrency(
+                  +detail.products.price * detail.quantity,
+                ),
                 bold: true,
-              },
-            ],
-            [
-              '3',
-              'Producto 3',
-              '3',
-              '300',
-              {
-                text: CurrencyFormatter.formatCurrency(900),
                 alignment: 'right',
-                bold: true,
               },
-            ],
+            ]),
           ],
         },
       },
@@ -181,7 +171,7 @@ export const orderByIdReport = (value: ReportValues): TDocumentDefinitions => {
                 [
                   'Subtotal',
                   {
-                    text: CurrencyFormatter.formatCurrency(3115.75),
+                    text: CurrencyFormatter.formatCurrency(subTotal),
                     bold: true,
                     alignment: 'right',
                   },
@@ -189,7 +179,7 @@ export const orderByIdReport = (value: ReportValues): TDocumentDefinitions => {
                 [
                   'Total',
                   {
-                    text: CurrencyFormatter.formatCurrency(3520.8),
+                    text: CurrencyFormatter.formatCurrency(subTotal * 1.15),
                     bold: true,
                     alignment: 'right',
                   },
