@@ -24,18 +24,20 @@ const generateChartImage = async () => {
 export const getBasicChartSvgReport =
   async (): Promise<TDocumentDefinitions> => {
     const chart = await generateChartImage();
-
+    
+    
+    
     return {
       content: [
         {
           svg: svgContent,
           width: 100,
-          fit: [100, 100],
+          fit: [100,100]
         },
         {
           image: chart,
-          width: 500,
-        },
+          width: 500
+        }
       ],
     };
   };
