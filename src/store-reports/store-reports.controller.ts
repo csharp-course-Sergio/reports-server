@@ -9,13 +9,22 @@ export class StoreReportsController {
   @Get('orders/:orderId')
   async getOrderReport(
     @Res() response: Response,
-
     @Param('orderId') orderId: string,
   ) {
     const pdfDoc = await this.storeReportsService.getOrderByIdReport(+orderId);
 
     response.setHeader('Content-Type', 'application/pdf');
     pdfDoc.info.Title = 'Order Report';
+    pdfDoc.pipe(response);
+    pdfDoc.end();
+  }
+
+  @Get('svgs-charts')
+  async getSvgChart(@Res() response: Response) {
+    const pdfDoc = await this.storeReportsService.getSvgChart();
+
+    response.setHeader('Content-Type', 'application/pdf');
+    pdfDoc.info.Title = 'Svg Chart';
     pdfDoc.pipe(response);
     pdfDoc.end();
   }
