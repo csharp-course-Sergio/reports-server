@@ -12,10 +12,10 @@ export class StoreReportsController {
 
     @Param('orderId') orderId: string,
   ) {
-    const pdfDoc = this.storeReportsService.hello();
+    const pdfDoc = await this.storeReportsService.getOrderByIdReport(orderId);
 
     response.setHeader('Content-Type', 'application/pdf');
-    pdfDoc.info.Title = 'Hola mundo';
+    pdfDoc.info.Title = 'Order Report';
     pdfDoc.pipe(response);
     pdfDoc.end();
   }
