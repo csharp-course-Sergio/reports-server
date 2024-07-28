@@ -3,6 +3,8 @@ import { getDonutChart } from './charts/donut.chart';
 import { headerSection } from './sections/header.section';
 import { getLinesChart } from './charts/line.chart';
 import { getBarsChart } from './charts/bars.chart';
+import { footerSection } from './sections/footer.sections';
+import { getPieChart } from './charts/pie.chart';
 
 interface TopCountry {
   country: string;
@@ -16,7 +18,7 @@ interface ReportOptions {
 export const statsReport = async (
   options: ReportOptions,
 ): Promise<TDocumentDefinitions> => {
-  const [donutChart, lineChart, barsChart1, barsChart2] = await Promise.all([
+  const [donutChart, lineChart, barsChart, pieChart] = await Promise.all([
     getDonutChart({
       entries: options.topCountries.map((c) => ({
         label: c.country,
@@ -26,7 +28,7 @@ export const statsReport = async (
     }),
     getLinesChart(),
     getBarsChart(),
-    getBarsChart(),
+    getPieChart(),
   ]);
 
   const docDefinition: TDocumentDefinitions = {
@@ -37,6 +39,7 @@ export const statsReport = async (
       showDate: true,
       showLogo: true,
     }),
+    footer: footerSection,
     content: [
       {
         columns: [
@@ -76,11 +79,11 @@ export const statsReport = async (
         columnGap: 10,
         columns: [
           {
-            image: barsChart1,
+            image: barsChart,
             width: 250,
           },
           {
-            image: barsChart2,
+            image: pieChart,
             width: 250,
           },
         ],
