@@ -13,7 +13,8 @@ const currentDate: Content = {
   text: DateFormatter.getDDMMMMYYYY(new Date()),
   alignment: 'right',
   margin: [20, 30],
-  width: 150,
+  width: 100,
+  fontSize: 12,
 };
 
 interface HeaderOptions {
@@ -29,13 +30,12 @@ export const headerSection = (options: HeaderOptions): Content => {
   const headerLogo: Content = showLogo ? logo : '';
   const headerDate: Content = showDate ? currentDate : '';
 
-  const headerSubtitule: Content = subtitle
+  const headerSubtitle: Content = subtitle
     ? {
         text: subtitle,
         margin: [0, 2, 0, 0],
         alignment: 'center',
         style: {
-          bold: true,
           fontSize: 16,
         },
       }
@@ -53,7 +53,7 @@ export const headerSection = (options: HeaderOptions): Content => {
               fontSize: 22,
             },
           },
-          headerSubtitule,
+          headerSubtitle,
         ],
       }
     : null;
