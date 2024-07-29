@@ -40,4 +40,29 @@ export class ExtraReportsService {
     const doc = this.printerService.createPdf(docDefinition);
     return doc;
   }
+
+  getCustomSize() {
+    const doc = this.printerService.createPdf({
+      // pageSize: 'TABLOID',
+      pageSize: {
+        width: 150,
+        height: 300,
+      },
+      content: [
+        {
+          qr: 'https://devtalles.com',
+          fit: 100,
+          alignment: 'center',
+        },
+        {
+          text: 'Reporte con tamaño',
+          fontSize: 10,
+          alignment: 'center',
+          margin: [0, 20],
+        },
+      ],
+    });
+
+    return doc;
+  }
 }
