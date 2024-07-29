@@ -5,3 +5,4 @@ export * from './countries.report';
 export * from './order-by-id.report';
 export * from './basic-chart-svg.report';
 export * from './stats.report';
+export * from './community.report';
